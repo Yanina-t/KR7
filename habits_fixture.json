@@ -1,0 +1,172 @@
+[
+  {
+    "model": "habits.habit",
+    "pk": 5,
+    "fields": {
+      "title": "Привычка 5",
+      "owner": 1,
+      "place": "Место 5",
+      "time": "08:00",
+      "action": "Действие 5",
+      "is_rewardable": true,
+      "related_habit": null,
+      "frequency": 1,
+      "reward": "Награда 5",
+      "execution_time": 120,
+      "is_public": false
+    }
+  },
+  {
+    "model": "habits.habit",
+    "pk": 6,
+    "fields": {
+      "title": "Привычка 6",
+      "owner": 2,
+      "place": "Место 6",
+      "time": "09:00",
+      "action": "Действие 6",
+      "is_rewardable": false,
+      "related_habit": null,
+      "frequency": 1,
+      "reward": null,
+      "execution_time": 120,
+      "is_public": true
+    }
+  },
+  {
+    "model": "habits.habit",
+    "pk": 7,
+    "fields": {
+      "title": "Привычка 7",
+      "owner": 3,
+      "place": "Место 7",
+      "time": "10:00",
+      "action": "Действие 7",
+      "is_rewardable": true,
+      "related_habit": null,
+      "frequency": 1,
+      "reward": "Награда 7",
+      "execution_time": 120,
+      "is_public": false
+    }
+  },
+  {
+    "model": "habits.habit",
+    "pk": 8,
+    "fields": {
+      "title": "Привычка 8",
+      "owner": 4,
+      "place": "Место 8",
+      "time": "08:00",
+      "action": "Действие 8",
+      "is_rewardable": false,
+      "related_habit": null,
+      "frequency": 1,
+      "reward": null,
+      "execution_time": 120,
+      "is_public": true
+    }
+  },
+  {
+    "model": "habits.habit",
+    "pk": 9,
+    "fields": {
+      "title": "Привычка 9",
+      "owner": 1,
+      "place": "Место 9",
+      "time": "09:00",
+      "action": "Действие 9",
+      "is_rewardable": true,
+      "related_habit": null,
+      "frequency": 1,
+      "reward": "Награда 9",
+      "execution_time": 120,
+      "is_public": false
+    }
+  },
+  {
+    "model": "habits.habit",
+    "pk": 10,
+    "fields": {
+      "title": "Привычка 10",
+      "owner": 2,
+      "place": "Место 10",
+      "time": "10:00",
+      "action": "Действие 10",
+      "is_rewardable": false,
+      "related_habit": null,
+      "frequency": 1,
+      "reward": null,
+      "execution_time": 120,
+      "is_public": true
+    }
+  },
+  {
+    "model": "habits.habit",
+    "pk": 11,
+    "fields": {
+      "title": "Привычка 11",
+      "owner": 3,
+      "place": "Место 11",
+      "time": "08:00",
+      "action": "Действие 11",
+      "is_rewardable": true,
+      "related_habit": null,
+      "frequency": 1,
+      "reward": "Награда 11",
+      "execution_time": 120,
+      "is_public": false
+    }
+  },
+  {
+    "model": "habits.habit",
+    "pk": 12,
+    "fields": {
+      "title": "Привычка 12",
+      "owner": 4,
+      "place": "Место 12",
+      "time": "09:00",
+      "action": "Действие 12",
+      "is_rewardable": false,
+      "related_habit": null,
+      "frequency": 1,
+      "reward": null,
+      "execution_time": 120,
+      "is_public": true
+    }
+  },
+  {
+    "model": "habits.habit",
+    "pk": 13,
+    "fields": {
+      "title": "Привычка 13",
+      "owner": 1,
+      "place": "Место 13",
+      "time": "10:00",
+      "action": "Действие 13",
+      "is_rewardable": true,
+      "related_habit": null,
+      "frequency": 1,
+      "reward": "Награда 13",
+      "execution_time": 120,
+      "is_public": false
+    }
+  },
+  {
+    "model": "habits.habit",
+    "pk": 14,
+    "fields": {
+      "title": "Привычка 14",
+      "owner": 2,
+      "place": "Место 14",
+      "time": "08:00",
+      "action": "Действие 14",
+      "is_rewardable": false,
+      "related_habit": null,
+      "frequency": 1,
+      "reward": null,
+      "execution_time": 120,
+      "is_public": true
+    }
+  }
+]
