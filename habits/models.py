@@ -1,5 +1,7 @@
 from django.db import models
-from habits.validators import validate_execution_time
+from habits.validators import validate_execution_time, validate_reward_and_linked_habit, validate_linked_habit, \
+    validate_rewarding_habit, validate_frequency
+from telegram_utils import send_notification
 from user.models import User
 
 
@@ -26,17 +28,21 @@ class Habit(models.Model):
     time = models.TimeField(verbose_name='Время')
     action = models.CharField(max_length=255, verbose_name='Действие')
     is_rewardable = models.BooleanField(default=False, verbose_name='Вознаграждаемая привычка')
-    related_habit = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True,
+    related_habit = models.ForeignKey('self', validators=[validate_linked_habit], on_delete=models.CASCADE, null=True,
+                                      blank=True,
                                       verbose_name='Связанная привычка')
-    frequency = models.IntegerField(default=1, verbose_name='Периодичность (в днях)')
+    frequency = models.IntegerField(default=1, validators=[validate_frequency], verbose_name='Периодичность (в днях)')
     reward = models.CharField(max_length=255, null=True, blank=True, verbose_name='Вознаграждение')
     execution_time = models.IntegerField(default=120, validators=[validate_execution_time], verbose_name='Время '
-                                                                                                           'выполнения (в секундах)')  # По умолчанию 120 секунд
+                                                                                                         'выполнения (в секундах)')  # По умолчанию 120 секунд
     is_public = models.BooleanField(default=False, verbose_name='Публичная привычка')
 
     def clean(self):
         if not self.action:
             raise ValueError("Действие должно быть указано")
+
+        validate_reward_and_linked_habit({'reward': self.reward, 'linked_habit': self.related_habit})
+        validate_rewarding_habit(self)
 
     def __str__(self):
         """
@@ -76,5 +82,3 @@ class HabitRecord(models.Model):
         Возвращает строковое представление записи выполнения привычки.
         """
         return f"{self.habit.action} - {self.date}"
-
-

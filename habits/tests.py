@@ -1,67 +1,70 @@
-from django.test import TestCase
+from django.contrib.auth.hashers import make_password
+from rest_framework.test import APITestCase
+from django.urls import reverse
+from rest_framework import status
 from user.models import User
-from .models import Habit
 
 
-class HabitModelTests(TestCase):
+class HabitAPITests(APITestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
-        self.habit_data = {
-            'place': 'Home',
-            'time': '08:00',
-            'action': '',  # Установим action пустым
-            'is_rewardable': True,
-            'frequency': 1,
-            'reward': 'Coffee',
-            'execution_time': 120,
-            'is_public': True,
-        }
+        # Создаем пользователя для аутентификации
+        self.user = User.objects.create(email='testuser@test.com', password='12345')
 
-    def test_habit_validation(self):
-        # Попытаемся создать привычку с пустым action
-        with self.assertRaises(ValueError):
-            habit = Habit.objects.create(user=self.user, **self.habit_data)
-            habit.full_clean()
+    def test_habit_list_authenticated(self):
+        # Аутентификация пользователя
+        url_login = reverse('user:user-login')
+        data_login = {'email': 'testuser@test.com', 'password': '12345'}
+        response_login = self.client.post(url_login, data_login)
+        self.assertEqual(response_login.status_code, status.HTTP_200_OK)
 
+        # Получение токена доступа
+        access_token = response_login.data['access']
 
-class HabitAPITests(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
-        self.habit_data = {
-            'place': 'Home',
-            'time': '08:00',
-            'action': 'Morning exercise',
-            'is_rewardable': True,
-            'frequency': 1,
-            'reward': 'Coffee',
-            'execution_time': 120,
-            'is_public': True,
-        }
+        # Установка токена доступа для последующих запросов
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(access_token))
 
-    def test_create_habit(self):
-        habit = Habit.objects.create(user=self.user, **self.habit_data)
-        self.assertEqual(habit.user, self.user)
-        self.assertEqual(Habit.objects.count(), 1)
+        # Запрос на получение списка привычек
+        url_habit_list = reverse('habit-list')
+        response_habit_list = self.client.get(url_habit_list)
+        self.assertEqual(response_habit_list.status_code, status.HTTP_200_OK)
 
-    def test_get_habit_list(self):
-        Habit.objects.create(user=self.user, **self.habit_data)
-        habits = Habit.objects.filter(user=self.user)
-        self.assertEqual(habits.count(), 1)
+    def test_habit_list_unauthenticated(self):
+        # Тест получения списка привычек без аутентификации
+        url = reverse('habit-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_get_habit_detail(self):
-        habit = Habit.objects.create(user=self.user, **self.habit_data)
-        fetched_habit = Habit.objects.get(pk=habit.pk)
-        self.assertEqual(habit, fetched_habit)
+    def test_successful_authentication(self):
+        # Создаем пользователя с хешированным паролем для успешной аутентификации
+        hashed_password = make_password('12345')
+        user = User.objects.create(email='testuser2@test.com', password=hashed_password)
 
-    def test_update_habit(self):
-        habit = Habit.objects.create(user=self.user, **self.habit_data)
-        updated_data = self.habit_data.copy()
-        updated_data['place'] = 'Gym'
-        habit.place = 'Gym'
-        habit.save()
-        self.assertEqual(habit.place, 'Gym')
+        # Попытка аутентификации
+        url_login = reverse('user:user-login')
+        data_login = {'email': 'testuser2@test.com', 'password': '12345'}
+        response_login = self.client.post(url_login, data_login)
+        self.assertEqual(response_login.status_code, status.HTTP_200_OK)
 
-    def test_delete_habit(self):
-        habit = Habit.objects.create(user=self.user, **self.habit_data)
-        habit.delete()
-        self.assertEqual(Habit.objects.count(), 0)
+    def test_habit_create_authenticated(self):
+        # Аутентификация пользователя
+        url_login = reverse('user:user-login')
+        data_login = {'email': 'testuser@test.com', 'password': '12345'}
+        response_login = self.client.post(url_login, data_login)
+        self.assertEqual(response_login.status_code, status.HTTP_200_OK)
+        token = response_login.data['access']
+
+        # Установка токена доступа для последующих запросов
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+
+        # Создание привычки
+        url_create_habit = reverse('habit-create')
+        data_create_habit = {'name': 'Test Habit'}
+        response_create_habit = self.client.post(url_create_habit, data_create_habit)
+        self.assertEqual(response_create_habit.status_code, status.HTTP_201_CREATED)
+
+    def test_habit_create_unauthenticated(self):
+        # Тест создания привычки без аутентификации
+        url = reverse('habit-create')
+        data = {'name': 'Test Habit'}
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

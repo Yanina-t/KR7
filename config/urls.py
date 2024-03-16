@@ -19,6 +19,7 @@ from django.urls import path, include
 from habits.swagger import urlpatterns as swagger_urls
 
 urlpatterns = [
+    path('', include('habits.urls')),
     path('admin/', admin.site.urls),
     path('api/', include('habits.urls')),
     path('user/', include('user.urls')),

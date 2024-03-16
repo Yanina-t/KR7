@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'django_celery_beat',
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_yasg',
@@ -161,8 +162,8 @@ SIMPLE_JWT = {
 
 AUTH_USER_MODEL = 'user.User'
 
-CELERY_BROKER_URL = 'redis://localhost:6379'  # возможно удали нолики
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')  # возможно удали нолики
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
 
 CELERY_TIMEZONE = "Europe/Belgrade"
 CELERY_BEAT_SCHEDULE = {
@@ -173,10 +174,11 @@ CELERY_BEAT_SCHEDULE = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.example.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
 
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')

@@ -1,24 +1,14 @@
 from django.contrib.auth import get_user_model
-from rest_framework import generics, permissions, status
-from rest_framework.pagination import PageNumberPagination
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Habit
+from .pagination import HabitListPagination
 from .serializers import HabitCreateSerializer, HabitReadSerializer
 from habits.permissions import IsPublicReadOnly, IsOwnerOrReadOnly
 
 User = get_user_model()
-
-
-class HabitListPagination(PageNumberPagination):
-    """
-    Пагинация списка привычек.
-    """
-    page_size = 5
-    page_query_param = 'page'
-    page_size_query_param = 'page_size'
-    max_page_size = 10
 
 
 class HabitListAPIView(generics.ListCreateAPIView):
@@ -75,7 +65,7 @@ class HabitDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_update(self, serializer):
         # Убедимся, что только владелец привычки может ее обновлять
-        if serializer.instance.owner  == self.request.user:
+        if serializer.instance.owner == self.request.user:
             serializer.save()
         else:
             return Response({"error": "Вы не владелец привычки"}, status=status.HTTP_403_FORBIDDEN)
