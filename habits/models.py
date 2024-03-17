@@ -41,7 +41,7 @@ class Habit(models.Model):
         if not self.action:
             raise ValueError("Действие должно быть указано")
 
-        validate_reward_and_linked_habit({'reward': self.reward, 'linked_habit': self.related_habit})
+        validate_reward_and_linked_habit(self)
         validate_rewarding_habit(self)
 
     def __str__(self):
