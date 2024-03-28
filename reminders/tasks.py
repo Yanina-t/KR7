@@ -5,7 +5,7 @@ from datetime import datetime
 from reminders.models import Habit
 from telegram import Bot
 
-app = Celery('tasks', broker='redis://localhost:6379/0')
+app = Celery('tasks', broker='redis://localhost:6379')
 
 
 @app.task

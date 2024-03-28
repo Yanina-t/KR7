@@ -1,0 +1,14 @@
+# Используем базовый образ Python
+FROM python:3.12
+
+# Устанавливаем рабочую директорию в контейнере
+WORKDIR /app
+
+# Устанавливаем зависимости через pip
+COPY requirements.txt .
+RUN pip install -r requirements.txt && \
+    pip cache purge
+
+# Копируем файлы проекта в контейнер
+COPY . .
+RUN rm -f .env
