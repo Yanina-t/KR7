@@ -13,6 +13,7 @@ from datetime import timedelta
 from pathlib import Path
 
 from celery.schedules import crontab
+from django.core.management.utils import get_random_secret_key
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,8 +25,9 @@ load_dotenv(BASE_DIR / '.env')
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY_PRODUCTION')
-
+SECRET_KEY = os.getenv('SECRET_KEY')
+# SECRET_KEY = 'django-insecure-f3wa9-h)%25iao=!icjqf6c!vojq$tlep5)j4me$dd+xn9f*_!'
+# SECRET_KEY = get_random_secret_key()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '21f2-109-93-118-125.ngrok-free.app', '5f02-109-93-118-125.ngrok-free.app']
@@ -94,9 +96,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', default=''),
-        'NAME': os.getenv('DB_NAME', default=''),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD', default=''),
+        'NAME': os.getenv('POSTGRES_DB', default=''),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default=''),
+        'HOST': '127.0.0.1',
+        'PORT': 5432
     }
 }
 
@@ -165,10 +169,12 @@ AUTH_USER_MODEL = 'user.User'
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')  # возможно удали нолики
 CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
 
+# Определение времени для использования другого таймзона
 CELERY_TIMEZONE = "Europe/Belgrade"
+# Определение периодических задач (если они есть)
 CELERY_BEAT_SCHEDULE = {
-    'schedule_reminders': {
-        'task': 'reminders.tasks.schedule_reminders',
+    'task-name': {
+        'task': 'reminders.tasks.send_habit_reminders',
         'schedule': crontab(minute='*/1'),
     },
 }
@@ -179,6 +185,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-print(EMAIL_HOST_PASSWORD)
 
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
