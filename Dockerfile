@@ -6,8 +6,7 @@ WORKDIR /app
 
 # Устанавливаем зависимости через pip
 COPY requirements.txt .
-RUN pip install -r requirements.txt && \
-    pip cache purge
+RUN pip install -r requirements.txt &&
 
 # Копируем файлы проекта в контейнер
 COPY . .

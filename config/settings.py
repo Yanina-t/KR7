@@ -13,7 +13,6 @@ from datetime import timedelta
 from pathlib import Path
 
 from celery.schedules import crontab
-from django.core.management.utils import get_random_secret_key
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -138,7 +137,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
